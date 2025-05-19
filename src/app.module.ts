@@ -7,11 +7,13 @@ import { UserModule } from './api/user/user.module';
 import { PassengerModule } from './api/passenger/passenger.module';
 import { FlightModule } from './api/flight/flight.module';
 import { AuthModule } from './api/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './api/auth/guards/auth.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env.development'],
+      envFilePath: '.env.development',
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.URI_MONGODB!),
@@ -21,6 +23,6 @@ import { AuthModule } from './api/auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}

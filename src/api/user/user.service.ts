@@ -11,6 +11,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserService {
   constructor(@InjectModel(USER.name) private readonly model: Model<IUser>) {}
 
+  async checkPassword(
+    password: string,
+    hashPasswordDb: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(password, hashPasswordDb);
+  }
+
   async hashPassword(password: string): Promise<string> {
     const salt: string = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
@@ -20,6 +27,10 @@ export class UserService {
     const hash = await this.hashPassword(createUserDto.password);
     const newUser = new this.model({ ...createUserDto, password: hash });
     return await newUser.save();
+  }
+
+  async findByUsername(username: string) {
+    return await this.model.findOne({ username });
   }
 
   async findAll(): Promise<Array<IUser>> {

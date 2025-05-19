@@ -10,7 +10,7 @@ export class CreateUserDto {
   @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
-  userName: string;
+  username: string;
 
   @ApiPropertyOptional()
   @IsString()
